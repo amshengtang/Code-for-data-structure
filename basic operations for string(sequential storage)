@@ -1,0 +1,134 @@
+#include<stdio.h>
+//定义数据类型
+#define MAXSIZE 255
+typedef char SString[MAXSIZE + 1];
+//初始化一个字符串,向一个字符串中赋值
+void InitString(SString S)
+{
+	int i = 1;
+	char ch;
+	S[0] = 0;
+	while ((ch = getchar()) != '\n' && i <= MAXSIZE)
+	{
+		S[0]++;
+		S[i++] = ch;
+	}
+}
+//将一个字符串中的内容全部输出
+void PrintString(SString S)
+{
+	if (S[0] == 0)
+	{
+		printf("空串！");
+		return;
+	}
+	int i = 1;
+	while (i <= S[0])
+	{
+		printf("%c", S[i]);
+		i++;
+	}
+}
+//将b的值赋值给a
+void StrAssign(SString a, SString b)
+{
+	a[0] = b[0];
+	int i = 1;
+	while (i <= a[0])
+	{
+		a[i] = b[i];
+		i++;
+	}
+}
+//比较字符串之间的大小
+int StrCompare(SString a, SString b)
+{
+	int i = 1;
+	while (i <= a[0] && i <=b[0])
+	{
+		if (a[i] < b[i])
+			return -1;
+		if (a[i] > b[i])
+			return 1;
+		i++;
+	}
+	if (a[0] == b[0])
+		return 0;
+	else if (a[0] > b[0])
+		return 1;
+	else
+		return -1;
+}
+//求串长
+int StrLength(SString S)
+{
+	return S[0];
+}
+//串联接,将s1,s2链接起来存入a
+void Concat(SString a, SString s1, SString s2)
+{
+	int i = 1;//用来记录下标
+	int j = 1;
+	while (j <= s1[0])
+		a[i++] = s1[j++];
+	a[0] = MAXSIZE;
+	if (s1[0] + s2[0] <= MAXSIZE)
+	{
+		a[0] = s1[0] + s2[0];
+		j = 1;
+		while (j <= s2[0])
+			a[i++] = s2[j++];
+	}
+	else if (s1[0] < MAXSIZE)
+	{
+		j = 1;
+		while (i <= MAXSIZE)
+		{
+			a[i++] = s2[j++];
+		}
+	}
+	else
+		return;
+}
+//求字符串a中第pos个字符开始长度为len的字符序列复制到b中
+int SubString(SString b, SString a, int pos, int len)
+{
+	if (pos<1 || pos>a[0] || len<0 || pos + len>a[0] + 1)
+	{
+		printf("Input Error!");
+		return -1;
+	}
+	int i;
+	int j = 1;
+	for (i = pos; i < pos + len; i++)
+		b[j++] = a[i];
+	b[0] = len;
+	return 1;
+}
+//求下标,b为主串
+int Index(SString b, SString a,int pos)
+{
+	int postmp=pos;
+	SString tmp;
+	while (postmp + a[0] - 1 <= b[0])
+	{
+		SubString(tmp, b, postmp, a[0]);
+		if (StrCompare(tmp, a) == 0)
+			return postmp;
+		else
+			postmp++;
+	}
+	if (postmp + a[0] - 1 > b[0])
+	{
+		printf("不存在！");
+		return -1;
+	}
+}
+int main()
+{
+	SString a, b;
+	InitString(a);
+	InitString(b);
+	printf("%d", Index(a, b, 1));
+}
+
